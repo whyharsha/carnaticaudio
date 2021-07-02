@@ -35,11 +35,11 @@ def list_ragas():
     ragas.append("Mayamalavagowla")
     ragas.append("Harikambhoji")
     ragas.append("Kharaharapriya")
-    ragas.append("Keeravani")
-    ragas.append("Sindhubhairavi")
+    ragas.append("Nattai ragam")
+    ragas.append("Bilahari ragam")
     ragas.append("Charukesi")
-    ragas.append("Abheri")
-    ragas.append("Kamas")
+    ragas.append("Abheri ragam")
+    ragas.append("Kamas ragam")
     ragas.append("Behag")
 
     return ragas
@@ -53,3 +53,8 @@ def parse_response(results, ragam, data):
         results.append(record)
 
     return results
+
+if __name__ == "__main__":
+    call_youtube()
+else:
+    print("Well, you are importing this, aren't you?")
