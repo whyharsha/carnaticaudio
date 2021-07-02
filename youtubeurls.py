@@ -3,10 +3,9 @@ import pandas as pd
 import requests
 
 url = "https://www.googleapis.com/youtube/v3/search"
-results = []
 
 def call_youtube():
-    
+    results = []
     ragas = list_ragas()
 
     for raga in ragas:
@@ -23,7 +22,7 @@ def call_youtube():
         if not response.status_code == 200:
             print(response)
         else:
-            parse_response(raga, response.json())
+            results = parse_response(results, raga, response.json())
     
     if len(results) > 0:
         df = pd.DataFrame(results)
@@ -45,11 +44,12 @@ def list_ragas():
 
     return ragas
 
-def parse_response(ragam, data):
+def parse_response(results, ragam, data):
     for item in data["items"]:
         record = {'ragam': ragam,
                   'video_id': item["id"]["videoId"], 
                   'title': item["snippet"]["title"], 
                   'desc': item["snippet"]["description"]}
-
         results.append(record)
+
+    return results
