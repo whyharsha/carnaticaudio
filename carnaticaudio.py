@@ -1,60 +1,22 @@
-from secrets import API_KEY, CLIENT_ID, CLIENT_SECRET
+from tube_dl import Youtube, extras
 import pandas as pd
-import requests
 
-url = "https://www.googleapis.com/youtube/v3/search"
-results = []
+url_file = "youtubeurls.csv"
 
-def call_youtube():
-    
-    ragas = list_ragas()
+def get_audio_files():
+    urls = load_urls()
 
-    for raga in ragas:
-        params = {
-            "part": "snippet",
-            "maxResults": 100,
-            "q": raga,
-            "type": "video",
-            "key": API_KEY
-        }
-    
-        response = requests.get(url, params)
+    for url in urls:
+        title = url["title"]
+        vid = Youtube(url["url"]).formats.filter_by(only_audio=True)[0]
+        form = vid.download(file_name=title)
+        extras.Convert(form,add_meta=False)
 
-        if not response.status_code == 200:
-            print(response)
-        else:
-            parse_response(raga, response.json())
-    
-    if len(results) > 0:
-        df = pd.DataFrame(results)
-        df.to_csv('youtubeurls.csv', index = False)
-
-def list_ragas():
-    ragas = []
-
-    ragas.append("Kapi ragam")
-    ragas.append("Mayamalavagowla")
-    ragas.append("Harikambhoji")
-    ragas.append("Kharaharapriya")
-    ragas.append("Keeravani")
-    ragas.append("Sindhubhairavi")
-    ragas.append("Charukesi")
-    ragas.append("Abheri")
-    ragas.append("Kamas")
-    ragas.append("Behag")
-
-    return ragas
-
-def parse_response(ragam, data):
-    for item in data["items"]:
-        record = {'ragam': ragam,
-                  'video_id': item["id"]["videoId"], 
-                  'title': item["snippet"]["title"], 
-                  'desc': item["snippet"]["description"]}
-
-        results.append(record)
+def load_urls():
+    df = pd.read_csv(url_file)
+    return [{"title": row[0] + "-" + row[2], "url":  f"https://www.youtube.com/watch?v={row[1]}"} for row in zip(df['ragam'], df['video_id'], df['title'])]
 
 if __name__ == "__main__":
-    call_youtube()
+    get_audio_files()
 else:
     print("Well, you are importing this, aren't you?")
