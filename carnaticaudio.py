@@ -1,20 +1,30 @@
-from tube_dl import Youtube, extras
+import youtube_dl
 import pandas as pd
 
 url_file = "youtubeurls.csv"
 
+def my_hook(d):
+    if d['status'] == 'finished':
+        print('Done downloading, now converting ...')
+
+ydl_opts = {
+    'format': 'bestaudio/best',
+    'postprocessors': [{
+        'key': 'FFmpegExtractAudio',
+        'preferredcodec': 'wav'
+    }],
+    'progress_hooks': [my_hook],
+}
+
 def get_audio_files():
     urls = load_urls()
 
-    for url in urls:
-        title = url["title"]
-        vid = Youtube(url["url"]).formats.filter_by(only_audio=True)[0]
-        form = vid.download(file_name=title)
-        extras.Convert(form,add_meta=False)
+    with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+        ydl.download(urls)
 
 def load_urls():
     df = pd.read_csv(url_file)
-    return [{"title": row[0] + "-" + row[2], "url":  f"https://www.youtube.com/watch?v={row[1]}"} for row in zip(df['ragam'], df['video_id'], df['title'])]
+    return [f"https://www.youtube.com/watch?v={vid}" for vid in df['video_id']]
 
 if __name__ == "__main__":
     get_audio_files()
