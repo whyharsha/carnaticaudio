@@ -28,7 +28,7 @@ def get_audio_files():
             }],
         }
 
-        filename = "r" + str(count) + url["ragam"] + "."
+        filename = str(count) + url["ragam"] + "."
         ydl_opts.update({'outtmpl':filename})
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
