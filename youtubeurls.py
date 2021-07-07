@@ -46,7 +46,11 @@ def list_ragas():
 
 def parse_response(results, ragam, data):
     for item in data["items"]:
-        record = {'ragam': ragam,
+        ragam_mod = ragam
+        if ragam.endswith("ragam"):
+            ragam_mod = ragam.removesuffix(" ragam")
+
+        record = {'ragam': ragam_mod,
                   'video_id': item["id"]["videoId"], 
                   'title': item["snippet"]["title"], 
                   'desc': item["snippet"]["description"]}
