@@ -17,6 +17,7 @@ def get_audio_files():
     for url in urls:
         if not url["ragam"] == ragam:
             count = 1
+            ragam = url["ragam"]
 
         ydl_opts = {
             'format': 'bestaudio/best',
@@ -33,7 +34,6 @@ def get_audio_files():
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([url["url"]])
 
-        ragam = url["ragam"]
         count = count + 1
 
 def load_urls():
