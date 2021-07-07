@@ -9,9 +9,7 @@ def my_hook(d):
         print('Done downloading, now converting ...')
 
 def get_audio_files():
-    urllist = load_urls()
-
-    urls = [urllist[1]]
+    urls = load_urls()
 
     count = 1
     ragam = ""
